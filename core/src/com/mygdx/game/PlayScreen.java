@@ -5,87 +5,116 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.BoxShapeBuilder;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.ChainShape;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class PlayScreen implements Screen {
 
     private UpAndDown game;
-    Texture texture;
+    private World world;
+    private Box2DDebugRenderer debugRenderer;
+    private Texture img;
     private OrthographicCamera gamecam;
     private Viewport gamePort;
-    private TmxMapLoader maploader;
-    private TiledMap map;
-    private OrthoCachedTiledMapRenderer maprenderer;
     private ShapeRenderer shapeRenderer;
     private Vector3 touchCoordinates;
     private boolean touched = false;
+    private Sprite sprite;
+    private BitmapFont font;
+    private Vector2 gravity = new Vector2(0, -9.81f);
+    private BodyDef ballDef;
+    private BodyDef ground;
+    private FixtureDef fixtureDef;
+    private float TIME_STEP = 1/60f;
+    private int VELOCITZITERATIONS = 8;
+    private int POSITIONITERATIONS = 3;
+    private float time = 0;
+
 
     public PlayScreen(UpAndDown game) {
         this.game = game;
-        texture = new Texture("badlogic.jpg");
         gamecam = new OrthographicCamera();
-        gamePort = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),gamecam);
-        maploader = new TmxMapLoader();
-        map = maploader.load("Map.tmx");
-        maprenderer = new OrthoCachedTiledMapRenderer(map);
+        gamePort = new FitViewport(Gdx.graphics.getWidth()/100, Gdx.graphics.getHeight()/100,gamecam);
         gamecam.position.set(gamePort.getWorldWidth()/2,gamePort.getWorldHeight()/2,0);
-        shapeRenderer = new ShapeRenderer();
         touchCoordinates = new Vector3();
+        world = new World(gravity,true);
+        debugRenderer = new Box2DDebugRenderer();
+        ballDef = new BodyDef();
+        ground = new BodyDef();
+        fixtureDef = new FixtureDef();
+
+
 
     }
     public void handleInput(float dt){
-        touchCoordinates.x = Gdx.input.getX();
-        touchCoordinates.y = Gdx.input.getY();
-        gamePort.unproject(touchCoordinates);
-        if(touchCoordinates.x+150 > Gdx.graphics.getWidth()/2){
-            touchCoordinates.x = (Gdx.graphics.getWidth()/2)-150;
-        }
-        else if(touchCoordinates.x < 150.){
-            touchCoordinates.x = 150;
-        }
-        if(touchCoordinates.y+150 > Gdx.graphics.getHeight()){
-            touchCoordinates.y = Gdx.graphics.getHeight()-150;
-        }
-        else if(touchCoordinates.y < 150){
-            touchCoordinates.y = 150;
-        }
-
-        if(Gdx.input.isTouched()){
-            touched = true;
-        }
-        else{
-            touched = false;
-        }
     }
 
     public void update(float dt){
         handleInput(dt);
         gamecam.update();
-        maprenderer.setView(gamecam);
+        touchCoordinates.x = Gdx.input.getX();
+        touchCoordinates.y = Gdx.input.getY();
+        gamePort.unproject(touchCoordinates);
+        if(Gdx.input.isTouched() && time > 0.5){
+            time = 0;
+            ballDef.position.set(touchCoordinates.x,touchCoordinates.y);
+            world.createBody(ballDef).createFixture(fixtureDef);
+        }
+
+        time += dt;
     }
 
     @Override
     public void show() {
 
+        ground.type = BodyDef.BodyType.StaticBody;
+
+        ChainShape groundShape = new ChainShape();
+        groundShape.createChain(new Vector2[] {new Vector2(-1,2),new Vector2(20,2)});
+        fixtureDef.shape = groundShape;
+        fixtureDef.density = 2.5f;
+        fixtureDef.friction = 0.5f;
+        fixtureDef.restitution = 0;
+        world.createBody(ground).createFixture(fixtureDef);
+
+        ballDef.type = BodyDef.BodyType.DynamicBody;
+        ballDef.position.set(5,5);
+
+        CircleShape shape = new CircleShape();
+        shape.setRadius(0.5f);
+
+
+        fixtureDef.shape = shape;
+        fixtureDef.density = 2.5f;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.5f;
+
+
+
+
     }
 
     @Override
-    public void render(float delta) {
-        update(delta);
+    public void render(float dt) {
+        update(Gdx.graphics.getDeltaTime());
         Gdx.gl.glClearColor(0, 0, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        maprenderer.render();
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        if(touched){
-            shapeRenderer.circle(touchCoordinates.x,touchCoordinates.y, 150);
-        }
-        shapeRenderer.end();
+        debugRenderer.render(world,gamecam.combined);
+        //font.draw(game.batch, touchCoordinates.toString(), 200, 200);
+        world.step(TIME_STEP, VELOCITZITERATIONS, POSITIONITERATIONS);
+
 
 
     }
@@ -107,11 +136,12 @@ public class PlayScreen implements Screen {
 
     @Override
     public void hide() {
-
+        dispose();
     }
 
     @Override
     public void dispose() {
-
+        world.dispose();
+        debugRenderer.dispose();
     }
 }
