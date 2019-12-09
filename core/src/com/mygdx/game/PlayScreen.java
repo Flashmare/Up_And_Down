@@ -7,18 +7,22 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.BoxShapeBuilder;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.ChainShape;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.Enteties.Ball;
+import com.mygdx.game.Enteties.Ground;
 
 public class PlayScreen implements Screen {
 
@@ -33,28 +37,33 @@ public class PlayScreen implements Screen {
     private boolean touched = false;
     private Sprite sprite;
     private BitmapFont font;
-    private Vector2 gravity = new Vector2(0, -9.81f);
-    private BodyDef ballDef;
-    private BodyDef ground;
+    private Vector2 gravity = new Vector2(0, -98.10f);
+    private Ground ground;
+
     private FixtureDef fixtureDef;
     private float TIME_STEP = 1/60f;
     private int VELOCITZITERATIONS = 8;
     private int POSITIONITERATIONS = 3;
     private float time = 0;
+    private Ball ball;
+    private Stage stage;
 
 
     public PlayScreen(UpAndDown game) {
         this.game = game;
         gamecam = new OrthographicCamera();
-        gamePort = new FitViewport(Gdx.graphics.getWidth()/100, Gdx.graphics.getHeight()/100,gamecam);
+        gamePort = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),gamecam);
         gamecam.position.set(gamePort.getWorldWidth()/2,gamePort.getWorldHeight()/2,0);
         touchCoordinates = new Vector3();
         world = new World(gravity,true);
         debugRenderer = new Box2DDebugRenderer();
-        ballDef = new BodyDef();
-        ground = new BodyDef();
-        fixtureDef = new FixtureDef();
+        debugRenderer.setDrawVelocities(true);
+        //ballDef = new BodyDef();
 
+        fixtureDef = new FixtureDef();
+        stage = new Stage();
+
+        ground = new Ground(world);
 
 
     }
@@ -69,8 +78,27 @@ public class PlayScreen implements Screen {
         gamePort.unproject(touchCoordinates);
         if(Gdx.input.isTouched() && time > 0.5){
             time = 0;
-            ballDef.position.set(touchCoordinates.x,touchCoordinates.y);
-            world.createBody(ballDef).createFixture(fixtureDef);
+            stage.addActor(new Ball(touchCoordinates.x, touchCoordinates.y, 125, world));
+            //world.createBody(ballDef).createFixture(fixtureDef);
+        }
+
+
+
+        for(Actor actor : stage.getActors())
+        {
+            if(time > 2)
+            {
+                actor.remove();
+            }
+        }
+        Array<Body> bodies = new Array<Body>();
+        world.getBodies(bodies);
+        for(Body body: bodies)
+        {
+            if(time > 2 )
+            {
+                world.destroyBody(body);
+            }
         }
 
         time += dt;
@@ -79,15 +107,7 @@ public class PlayScreen implements Screen {
     @Override
     public void show() {
 
-        ground.type = BodyDef.BodyType.StaticBody;
-
-        ChainShape groundShape = new ChainShape();
-        groundShape.createChain(new Vector2[] {new Vector2(-1,2),new Vector2(20,2)});
-        fixtureDef.shape = groundShape;
-        fixtureDef.density = 2.5f;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0;
-        world.createBody(ground).createFixture(fixtureDef);
+        /*
 
         ballDef.type = BodyDef.BodyType.DynamicBody;
         ballDef.position.set(5,5);
@@ -99,7 +119,7 @@ public class PlayScreen implements Screen {
         fixtureDef.shape = shape;
         fixtureDef.density = 2.5f;
         fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.5f;
+        fixtureDef.restitution = 0.5f;*/
 
 
 
@@ -115,7 +135,7 @@ public class PlayScreen implements Screen {
         //font.draw(game.batch, touchCoordinates.toString(), 200, 200);
         world.step(TIME_STEP, VELOCITZITERATIONS, POSITIONITERATIONS);
 
-
+        stage.draw();
 
     }
 
