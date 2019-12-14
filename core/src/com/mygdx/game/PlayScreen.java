@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -44,6 +45,7 @@ public class PlayScreen implements Screen {
     private Stage stage;
     private Vector2 playerSpeed;
     private GamePad gp;
+    private Sound sound;
 
 
     public PlayScreen(UpAndDown game) {
@@ -58,16 +60,24 @@ public class PlayScreen implements Screen {
         playerSpeed = new Vector2();
         stage.setViewport(gamePort);
         gp = new GamePad(world,gamePort);
+        sound = Gdx.audio.newSound(Gdx.files.internal("explosion.wav"));
 
 
     }
     public void handleInput(float dt){
         player.applyForce(gp.getPosition());
+
+        if((player.getPosition().x + player.getWidth()) >= (enemy.getPosition().x - 3))
+        {
+            sound.play(1.0f);
+        }
     }
 
     public void update(float dt){
 
         handleInput(dt);
+
+
 
 
         gamecam.update();
@@ -123,5 +133,6 @@ public class PlayScreen implements Screen {
     public void dispose() {
         world.dispose();
         debugRenderer.dispose();
+        sound.dispose();
     }
 }
