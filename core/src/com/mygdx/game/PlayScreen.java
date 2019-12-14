@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -45,7 +46,11 @@ public class PlayScreen implements Screen {
     private Stage stage;
     private Vector2 playerSpeed;
     private GamePad gp;
+<<<<<<< HEAD
     private Jump jump;
+=======
+    private Sound sound;
+>>>>>>> d4e8fa38e36a9eb452c8e65db708939da2012037
 
 
     public PlayScreen(UpAndDown game) {
@@ -60,14 +65,25 @@ public class PlayScreen implements Screen {
         playerSpeed = new Vector2();
         stage.setViewport(gamePort);
         gp = new GamePad(world,gamePort);
+<<<<<<< HEAD
         jump = new Jump(world,gamePort,stage);
+=======
+        sound = Gdx.audio.newSound(Gdx.files.internal("explosion.wav"));
+>>>>>>> d4e8fa38e36a9eb452c8e65db708939da2012037
 
 
     }
     public void handleInput(float dt){
         player.applyForce(gp.getPosition());
+<<<<<<< HEAD
         if(jump.isJumpPressed() && player.getPosition().y < 5){
             player.applyForceToCenter(new Vector2(0f,10000f));
+=======
+
+        if((player.getPosition().x + player.getWidth()) >= (enemy.getPosition().x - 3))
+        {
+            sound.play(1.0f);
+>>>>>>> d4e8fa38e36a9eb452c8e65db708939da2012037
         }
     }
 
@@ -75,6 +91,8 @@ public class PlayScreen implements Screen {
 
         handleInput(dt);
         world.step(TIME_STEP, VELOCITZITERATIONS, POSITIONITERATIONS);
+
+
 
         gamecam.update();
 
@@ -128,5 +146,6 @@ public class PlayScreen implements Screen {
     public void dispose() {
         world.dispose();
         debugRenderer.dispose();
+        sound.dispose();
     }
 }
