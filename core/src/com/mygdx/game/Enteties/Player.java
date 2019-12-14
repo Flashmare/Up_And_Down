@@ -10,14 +10,15 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class Ball extends Actor {
+public class Player extends Actor {
 
     private Sprite sprite;
-    private BodyDef ball;
-    private CircleShape shape;
+    private BodyDef square;
+    private PolygonShape shape;
     private FixtureDef fixtureDef;
     private World world;
     private Body body;
@@ -37,30 +38,30 @@ public class Ball extends Actor {
         sprite.setPosition(position.x - sprite.getWidth() / 2.0f, position.y - sprite.getHeight() / 2.0f);
         sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
     }
-    public Ball(float x, float y, float r, World world){
+    public Player(float x, float y, float w, float h, World world){
         //Definitons
-        sprite = new Sprite(new Texture(Gdx.files.internal("badlogic.png")));
-        ball = new BodyDef();
-        shape = new CircleShape();
+        sprite = new Sprite(new Texture(Gdx.files.internal("Player.png")));
+        square = new BodyDef();
+        shape = new PolygonShape();
         fixtureDef = new FixtureDef();
         this.world = world;
         position = new Vector2(x,y);
 
         //Set sprite position and scale
         sprite.setPosition(x,y);
-        sprite.setScale(1/100f,1/100f);
+        sprite.setScale(1/90f,1/90f);
 
-        ball.type = BodyDef.BodyType.DynamicBody;
-        ball.position.set(x,y);
+        square.type = BodyDef.BodyType.DynamicBody;
+        square.position.set(x,y);
 
-        shape.setRadius(r);
+        shape.setAsBox(w/2,h/2);
 
         fixtureDef.shape = shape;
         fixtureDef.density = 2.5f;
         fixtureDef.friction = 0.4f;
         fixtureDef.restitution = 0.5f;
 
-        this.body = world.createBody(ball);
+        this.body = world.createBody(square);
         this.body.createFixture(fixtureDef);
 
 
