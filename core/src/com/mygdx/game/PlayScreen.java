@@ -5,21 +5,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Controlls.GamePad;
@@ -46,11 +35,8 @@ public class PlayScreen implements Screen {
     private Stage stage;
     private Vector2 playerSpeed;
     private GamePad gp;
-<<<<<<< HEAD
-    private Jump jump;
-=======
     private Sound sound;
->>>>>>> d4e8fa38e36a9eb452c8e65db708939da2012037
+    private Jump jump;
 
 
     public PlayScreen(UpAndDown game) {
@@ -65,32 +51,24 @@ public class PlayScreen implements Screen {
         playerSpeed = new Vector2();
         stage.setViewport(gamePort);
         gp = new GamePad(world,gamePort);
-<<<<<<< HEAD
         jump = new Jump(world,gamePort,stage);
-=======
         sound = Gdx.audio.newSound(Gdx.files.internal("explosion.wav"));
->>>>>>> d4e8fa38e36a9eb452c8e65db708939da2012037
 
 
     }
     public void handleInput(float dt){
         player.applyForce(gp.getPosition());
-<<<<<<< HEAD
+
         if(jump.isJumpPressed() && player.getPosition().y < 5){
             player.applyForceToCenter(new Vector2(0f,10000f));
-=======
-
-        if((player.getPosition().x + player.getWidth()) >= (enemy.getPosition().x - 3))
-        {
             sound.play(1.0f);
->>>>>>> d4e8fa38e36a9eb452c8e65db708939da2012037
         }
     }
 
     public void update(float dt){
 
         handleInput(dt);
-        world.step(TIME_STEP, VELOCITZITERATIONS, POSITIONITERATIONS);
+
 
 
 
@@ -118,6 +96,8 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         debugRenderer.render(world,gamecam.combined);
+        world.step(TIME_STEP, VELOCITZITERATIONS, POSITIONITERATIONS);
+
         stage.draw();
 
     }
