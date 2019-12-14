@@ -46,8 +46,8 @@ public class GamePad extends Actor {
     }
     public Vector2 getPosition(){
         update();
-        if(Gdx.input.isTouched() && position.x < gamePort.getWorldWidth()/3){
-            return new Vector2 (((position.x-(gamePort.getWorldWidth()/6))/2), 0);
+        if(Gdx.input.isTouched() && position.x < gamePort.getWorldWidth()/2){
+            return new Vector2 (((position.x-(gamePort.getWorldWidth()/4))/2), 0);
         }
         else{
             return new Vector2 (0,0);

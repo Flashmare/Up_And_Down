@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Controlls.GamePad;
+import com.mygdx.game.Controlls.Jump;
 import com.mygdx.game.Enteties.Ball;
 import com.mygdx.game.Enteties.Ground;
 import com.mygdx.game.Enteties.Player;
@@ -44,6 +45,7 @@ public class PlayScreen implements Screen {
     private Stage stage;
     private Vector2 playerSpeed;
     private GamePad gp;
+    private Jump jump;
 
 
     public PlayScreen(UpAndDown game) {
@@ -58,17 +60,21 @@ public class PlayScreen implements Screen {
         playerSpeed = new Vector2();
         stage.setViewport(gamePort);
         gp = new GamePad(world,gamePort);
+        jump = new Jump(world,gamePort,stage);
 
 
     }
     public void handleInput(float dt){
         player.applyForce(gp.getPosition());
+        if(jump.isJumpPressed() && player.getPosition().y < 5){
+            player.applyForceToCenter(new Vector2(0f,10000f));
+        }
     }
 
     public void update(float dt){
 
         handleInput(dt);
-
+        world.step(TIME_STEP, VELOCITZITERATIONS, POSITIONITERATIONS);
 
         gamecam.update();
 
@@ -83,6 +89,7 @@ public class PlayScreen implements Screen {
         stage.addActor(player);
         stage.addActor(enemy);
         stage.addActor(gp);
+        stage.addActor(jump.getTable());
 
 
     }
@@ -93,8 +100,6 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         debugRenderer.render(world,gamecam.combined);
-        world.step(TIME_STEP, VELOCITZITERATIONS, POSITIONITERATIONS);
-
         stage.draw();
 
     }

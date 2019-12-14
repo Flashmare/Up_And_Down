@@ -36,7 +36,6 @@ public class Player extends Actor {
     public void update() {
         position = body.getPosition();
         sprite.setPosition(position.x - sprite.getWidth() / 2.0f, position.y - sprite.getHeight() / 2.0f);
-        sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
     }
     public Player(float x, float y, float w, float h, World world){
         //Definitons
@@ -53,6 +52,7 @@ public class Player extends Actor {
 
         square.type = BodyDef.BodyType.DynamicBody;
         square.position.set(x,y);
+        square.fixedRotation = true;
 
         shape.setAsBox(w/2,h/2);
 
@@ -60,7 +60,6 @@ public class Player extends Actor {
         fixtureDef.density = 2.5f;
         fixtureDef.friction = 0.4f;
         fixtureDef.restitution = 0.5f;
-
         this.body = world.createBody(square);
         this.body.createFixture(fixtureDef);
 
@@ -69,5 +68,6 @@ public class Player extends Actor {
     public void applyForce(Vector2 touch){
         this.body.setLinearVelocity(touch);
     }
+    public void applyForceToCenter(Vector2 touch) { this.body.applyForceToCenter(touch,true); }
     public Vector2 getPosition(){return position;}
 }
