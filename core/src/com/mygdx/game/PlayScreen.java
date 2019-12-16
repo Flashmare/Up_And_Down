@@ -12,10 +12,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Controlls.GamePad;
-import com.mygdx.game.Controlls.Jump;
+import com.mygdx.game.Controlls.ButtonControlls;
+import com.mygdx.game.Controlls.GyroControlls;
 import com.mygdx.game.Enteties.Ball;
 import com.mygdx.game.Enteties.Ground;
 import com.mygdx.game.Enteties.Player;
+
+import java.awt.Button;
 
 public class PlayScreen implements Screen {
 
@@ -29,14 +32,14 @@ public class PlayScreen implements Screen {
     private float TIME_STEP = 1/60f;
     private int VELOCITZITERATIONS = 8;
     private int POSITIONITERATIONS = 3;
-    private float time = 0;
     private Player player;
     private Ball enemy;
     private Stage stage;
+    private GyroControlls gyroControlls;
     private Vector2 playerSpeed;
     private GamePad gamePad;
     private Sound sound;
-    private Jump jump;
+    private ButtonControlls buttonControlls;
 
 
     public PlayScreen(UpAndDown game) {
@@ -51,7 +54,9 @@ public class PlayScreen implements Screen {
         playerSpeed = new Vector2();
         stage.setViewport(gamePort);
         gamePad = new GamePad(world,gamePort);
-        jump = new Jump(world,gamePort,stage);
+        buttonControlls = new ButtonControlls(world,gamePort,stage);
+
+
         sound = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
 
 
@@ -60,18 +65,18 @@ public class PlayScreen implements Screen {
         if(Gdx.input.isTouched()){
             player.applyForce(new Vector2(gamePad.getPosition().x,player.getValocity().y));
         }
-        if(jump.isJumpPressed() && player.getValocity().y < 0.9){
+        if(buttonControlls.isJumpPressed() && player.getValocity().y < 0.9){
             player.applyForce(new Vector2(0,25f));
             sound.play(1.0f);
         }
-        System.out.println(Gdx.input.getGyroscopeX()+" "+Gdx.input.getGyroscopeY()+" "+Gdx.input.getGyroscopeZ());
+        if(buttonControlls.isShootPressed()){
+            System.out.println(gyroControlls.getPosition());
+        }
     }
 
     public void update(float dt){
         handleInput();
         gamecam.update();
-
-        time += dt;
     }
 
     @Override
@@ -79,10 +84,11 @@ public class PlayScreen implements Screen {
         ground = new Ground(world);
         player = new Player(1,1, 2.5f,4f, world);
         enemy = new Ball(8,1, 1.25f, world);
+        gyroControlls = new GyroControlls(world,player);
         stage.addActor(player);
         stage.addActor(enemy);
         stage.addActor(gamePad);
-        stage.addActor(jump.getTable());
+        stage.addActor(buttonControlls.getTable());
 
 
     }

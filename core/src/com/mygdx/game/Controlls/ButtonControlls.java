@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 
-public class Jump extends Actor {
+public class ButtonControlls extends Actor {
 
     private World world;
     private Viewport gamePort;
@@ -24,7 +24,7 @@ public class Jump extends Actor {
     private Table table;
     boolean jumpPressed, shootPressed;
 
-    public Jump(World world, Viewport gamePort, Stage stage){
+    public ButtonControlls(World world, Viewport gamePort, Stage stage){
         this.world = world;
         this.gamePort = gamePort;
         Gdx.input.setInputProcessor(stage);
