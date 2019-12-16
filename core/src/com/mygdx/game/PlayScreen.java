@@ -34,7 +34,7 @@ public class PlayScreen implements Screen {
     private Ball enemy;
     private Stage stage;
     private Vector2 playerSpeed;
-    private GamePad gp;
+    private GamePad gamePad;
     private Sound sound;
     private Jump jump;
 
@@ -50,28 +50,25 @@ public class PlayScreen implements Screen {
         stage = new Stage();
         playerSpeed = new Vector2();
         stage.setViewport(gamePort);
-        gp = new GamePad(world,gamePort);
+        gamePad = new GamePad(world,gamePort);
         jump = new Jump(world,gamePort,stage);
-        sound = Gdx.audio.newSound(Gdx.files.internal("explosion.wav"));
+        sound = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
 
 
     }
-    public void handleInput(float dt){
-        player.applyForce(gp.getPosition());
-
-        if(jump.isJumpPressed() && player.getPosition().y < 5){
-            player.applyForceToCenter(new Vector2(0f,10000f));
+    public void handleInput(){
+        if(Gdx.input.isTouched()){
+            player.applyForce(new Vector2(gamePad.getPosition().x,player.getValocity().y));
+        }
+        if(jump.isJumpPressed() && player.getValocity().y < 0.9){
+            player.applyForce(new Vector2(0,25f));
             sound.play(1.0f);
         }
+        System.out.println(Gdx.input.getGyroscopeX()+" "+Gdx.input.getGyroscopeY()+" "+Gdx.input.getGyroscopeZ());
     }
 
     public void update(float dt){
-
-        handleInput(dt);
-
-
-
-
+        handleInput();
         gamecam.update();
 
         time += dt;
@@ -84,7 +81,7 @@ public class PlayScreen implements Screen {
         enemy = new Ball(8,1, 1.25f, world);
         stage.addActor(player);
         stage.addActor(enemy);
-        stage.addActor(gp);
+        stage.addActor(gamePad);
         stage.addActor(jump.getTable());
 
 

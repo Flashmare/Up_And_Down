@@ -59,7 +59,7 @@ public class Player extends Actor {
         fixtureDef.shape = shape;
         fixtureDef.density = 2.5f;
         fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.5f;
+        fixtureDef.restitution = 0.2f;
         this.body = world.createBody(square);
         this.body.createFixture(fixtureDef);
 
@@ -70,4 +70,5 @@ public class Player extends Actor {
     }
     public void applyForceToCenter(Vector2 touch) { this.body.applyForceToCenter(touch,true); }
     public Vector2 getPosition(){return position;}
+    public Vector2 getValocity(){return this.body.getLinearVelocity();}
 }

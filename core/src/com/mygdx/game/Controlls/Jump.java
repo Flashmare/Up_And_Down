@@ -29,7 +29,7 @@ public class Jump extends Actor {
         this.gamePort = gamePort;
         Gdx.input.setInputProcessor(stage);
         table= new Table();
-        table.setPosition(63,8);
+        table.setPosition( gamePort.getWorldWidth()*0.85f,gamePort.getWorldHeight()*0.2f);
         Image jump = new Image(new Texture("Jump_up.png"));
         Image shoot = new Image(new Texture("Shoot_up.png"));
         jump.setSize(7,7);
