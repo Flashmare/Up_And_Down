@@ -13,42 +13,29 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class Ball extends Actor {
+public class Ball {
 
     private Sprite sprite;
     private BodyDef ball;
     private CircleShape shape;
     private FixtureDef fixtureDef;
-    private World world;
     private Body body;
     private Vector2 position;
+    private World world;
+    private boolean killed;
 
-
-
-    @Override
-    public void draw (Batch batch, float parentAlpha) {
-        update();
-        sprite.draw(batch);
-
-    }
-
-    public void update() {
-        position = body.getPosition();
-        sprite.setPosition(position.x - sprite.getWidth() / 2.0f, position.y - sprite.getHeight() / 2.0f);
-        sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
-    }
     public Ball(float x, float y, float r, World world){
         //Definitons
-        sprite = new Sprite(new Texture(Gdx.files.internal("badlogic.png")));
+        killed = false;
+        sprite = new Sprite(new Texture(Gdx.files.internal("enemy.png")));
         ball = new BodyDef();
         shape = new CircleShape();
         fixtureDef = new FixtureDef();
-        this.world = world;
         position = new Vector2(x,y);
 
+        this.world = world;
         //Set sprite position and scale
-        sprite.setPosition(x,y);
-        sprite.setScale(1/100f,1/100f);
+        sprite.setScale(1/20f,1/20f);
 
         ball.type = BodyDef.BodyType.DynamicBody;
         ball.position.set(x,y);
@@ -62,11 +49,28 @@ public class Ball extends Actor {
 
         this.body = world.createBody(ball);
         this.body.createFixture(fixtureDef);
+    }
 
+    public void draw (Batch batch) {
+        if(!killed){
+            update();
+            sprite.draw(batch);
+        }
 
     }
+
+    public void update() {
+        position = body.getPosition();
+        sprite.setPosition(position.x - sprite.getWidth() / 2.0f, position.y+0.40f - sprite.getHeight() / 2.0f);
+        sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+    }
+
     public void applyForce(Vector2 touch){
         this.body.setLinearVelocity(touch);
     }
     public Vector2 getPosition(){return position;}
+    public void dispose(){
+        killed = true;
+        this.world.destroyBody(this.body);
+    }
 }

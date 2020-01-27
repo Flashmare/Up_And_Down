@@ -1,0 +1,152 @@
+
+gameOver.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+endgame
+  rotate: false
+  xy: 1, 609
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 0
+endgame
+  rotate: false
+  xy: 1, 457
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 1
+endgame
+  rotate: false
+  xy: 303, 609
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 2
+endgame
+  rotate: false
+  xy: 1, 305
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 3
+endgame
+  rotate: false
+  xy: 303, 457
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 4
+endgame
+  rotate: false
+  xy: 605, 609
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 5
+endgame
+  rotate: false
+  xy: 605, 609
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 6
+endgame
+  rotate: false
+  xy: 605, 609
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 7
+endgame
+  rotate: false
+  xy: 605, 609
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 8
+endgame
+  rotate: false
+  xy: 605, 609
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 9
+endgame
+  rotate: false
+  xy: 605, 609
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 10
+endgame
+  rotate: false
+  xy: 605, 609
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 11
+endgame
+  rotate: false
+  xy: 605, 609
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 12
+endgame
+  rotate: false
+  xy: 605, 609
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 13
+endgame
+  rotate: false
+  xy: 1, 153
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 14
+endgame
+  rotate: false
+  xy: 303, 305
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 15
+endgame
+  rotate: false
+  xy: 605, 457
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 16
+endgame
+  rotate: false
+  xy: 1, 1
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 17
+endgame
+  rotate: false
+  xy: 303, 153
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 18
+endgame
+  rotate: false
+  xy: 303, 153
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 19
+endgame
+  rotate: false
+  xy: 303, 153
+  size: 300, 150
+  orig: 300, 150
+  offset: 0, 0
+  index: 20
